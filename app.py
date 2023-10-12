@@ -3,7 +3,7 @@ from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
 import os
-from Models import database_models
+
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -32,21 +32,21 @@ def fb_drop():
 
 @app.cli.command('db_seed')
 def db_seed():
-    mercury = database_models.Planet(planet_name = 'Mercury',
+    mercury = Planet(planet_name = 'Mercury',
                                      planet_type = 'Class D',
                                      home_star='Sol',
                                      mass=3.258e23,
                                      radius=1516,
                                      distance=35.98e6)
     
-    venus = database_models.Planet(planet_name = 'Venus',
+    venus = Planet(planet_name = 'Venus',
                                      planet_type = 'Class k',
                                      home_star='Sol',
                                      mass=4.867e24,
                                      radius=3760,
                                      distance=67.24e6)
     
-    earth = database_models.Planet(planet_name = 'Earth',
+    earth = Planet(planet_name = 'Earth',
                                      planet_type = 'Class M',
                                      home_star='Sol',
                                      mass=5.972e24,
@@ -57,7 +57,7 @@ def db_seed():
     db.session.add(venus)
     db.session.add(earth)
 
-    test_user = database_models.User(first_name='William',
+    test_user = User(first_name='William',
                                      last_name='Herschel',
                                      email='test@test.com',
                                      password='P@ssw0rd')
@@ -105,4 +105,25 @@ def parameters():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+class User(db.Model):
+    # Define all the fields 
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    email = Column(String, unique=True)
+    password = Column(String)
+
+
+class Planet(db.Model):
+    __tablename__ = 'planets'
+    planet_id = Column(Integer, primary_key=True)
+    planet_name = Column(String)
+    planet_type = Column(String)    
+    home_star = Column(String)
+    mass = Column(Float)
+    radius = Column(Float)
+    distance = Column(Float)
 
