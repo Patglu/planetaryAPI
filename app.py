@@ -52,7 +52,20 @@ def db_seed():
                                      mass=5.972e24,
                                      radius=3959,
                                      distance=92.96e6)
+    
+    db.session.add(mercury)
+    db.session.add(venus)
+    db.session.add(earth)
 
+    test_user = database_models.User(first_name='William',
+                                     last_name='Herschel',
+                                     email='test@test.com',
+                                     password='P@ssw0rd')
+    
+    db.session.add(test_user)
+    # Commit needed to save session
+    db.session.commit() 
+    print('Database seeded!')
 
 @app.route('/<name>')
 def print_hi(name):
