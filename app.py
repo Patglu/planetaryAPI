@@ -3,6 +3,7 @@ from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
 import os
+from Models import database_models
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -12,6 +13,45 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'pl
 def default_hi():
     print("Hi, there!")
     return "Hi, there from earth!" 
+
+# Configure our database 
+db = SQLAlchemy(app)
+
+@app.cli.command('db_create')
+def db_create():
+    db.create_all()
+    print('database Created!')
+
+
+
+@app.cli.command('db_drop')
+def fb_drop():
+    db.drop_all()
+    print('Database Dropped!')
+
+
+@app.cli.command('db_seed')
+def db_seed():
+    mercury = database_models.Planet(planet_name = 'Mercury',
+                                     planet_type = 'Class D',
+                                     home_star='Sol',
+                                     mass=3.258e23,
+                                     radius=1516,
+                                     distance=35.98e6)
+    
+    venus = database_models.Planet(planet_name = 'Venus',
+                                     planet_type = 'Class k',
+                                     home_star='Sol',
+                                     mass=4.867e24,
+                                     radius=3760,
+                                     distance=67.24e6)
+    
+    earth = database_models.Planet(planet_name = 'Earth',
+                                     planet_type = 'Class M',
+                                     home_star='Sol',
+                                     mass=5.972e24,
+                                     radius=3959,
+                                     distance=92.96e6)
 
 
 @app.route('/<name>')
@@ -52,3 +92,4 @@ def parameters():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
