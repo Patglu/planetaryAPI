@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Python: Run API Project",
             "type": "python",
@@ -11,7 +12,9 @@
             "module": "flask",
             "env": {
                 "FLASK_APP": "app.py",
-                "FLASK_DEBUG": "0"
+                "FLASK_DEBUG": "0",
+                "MAIL_USERNAME": "61588f4603c5e3",
+                "MAIL_PASSWORD": "539a7fd1ac64af"
             },
             "args": [
                 "run",
