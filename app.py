@@ -212,6 +212,7 @@ def add_planet():
         db.session.commit()
         return jsonify(message="You added a planet"), 201
     
+@jwt_required()
 @app.route('/update_planet', methods=['PUT'])
 def update_planet():
     planet_id = int(request.args.get('planet_id'))
@@ -228,6 +229,16 @@ def update_planet():
     else:
         return jsonify(message="The planet does not exist")
 
+@jwt_required()
+@app.route('/remove_planet/<int:planet_id>', methods=['DELETE'])
+def remove_planet(planet_id:int):
+    planet = Planet.query.filter_by(planet_id=planet_id).first()
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return jsonify(message= "Yup you deleted a planet there MR planetory destroyer"), 202
+    else:
+        return jsonify(messgae= "That planet does not exist")
 
 # database models
 class User(db.Model):
