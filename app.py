@@ -172,6 +172,17 @@ def retrieve_password(email: str):
         return jsonify(message= "Password sent to " + email)
     else:
         return jsonify(message= "That email doesn't")
+    
+    
+@app.route('/planet_details/<int:planet_id>', methods=["GET"])
+def planet_details(planet_id: int):
+    planet  = Planet.query.filter_by(planet_id=planet_id).first()
+    if planet:
+        result = planet_schema.dump(planet)
+        return jsonify(result)
+    else:
+        return jsonify(message="That planet deos not exsist"), 404
+
 
 # database models
 class User(db.Model):
@@ -211,6 +222,9 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 planet_schema = PlanetSchema()
 planets_schema = PlanetSchema(many=True)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
