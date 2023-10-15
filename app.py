@@ -184,17 +184,22 @@ def planet_details(planet_id: int):
         return jsonify(message="That planet deos not exsist"), 404
 
 @app.route('/add_planet', methods=['POST'])
+@jwt_required()
 def add_planet():
     planet_name = request.args.get('planet_name')
+    
     test = Planet.query.filter_by(planet_name=planet_name).first()
     if test:
         return jsonify("There is already a planet by that name"), 409
     else:
+        
         planet_type = request.args.get('planet_type')
         home_star = request.args.get('home_star')
         mass = float(request.args.get('mass'))
         radius = float(request.args.get('radius'))
         distance = float(request.args.get('distance'))
+        
+        
         
         new_planet = Planet(planet_name=planet_name,
                             planet_type=planet_type,
