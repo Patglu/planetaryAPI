@@ -183,8 +183,8 @@ def planet_details(planet_id: int):
     else:
         return jsonify(message="That planet deos not exsist"), 404
 
-@app.route('/add_planet', methods=['POST'])
 @jwt_required()
+@app.route('/add_planet', methods=['POST'])
 def add_planet():
     planet_name = request.args.get('planet_name')
     
@@ -211,6 +211,23 @@ def add_planet():
         db.session.add(new_planet)
         db.session.commit()
         return jsonify(message="You added a planet"), 201
+    
+@app.route('/update_planet', methods=['PUT'])
+def update_planet():
+    planet_id = int(request.args.get('planet_id'))
+    planet = Planet.query.filter_by(planet_id=planet_id).first()
+    if planet:
+        planet.planet_name = request.args.get('planet_name')
+        planet.planet_type = request.args.get('planet_type')
+        planet.home_star = request.args.get('home_star')
+        planet.mass = float(request.args.get('mass'))
+        planet.radius = float(request.args.get('radius'))
+        planet.distance = float(request.args.get('distance'))
+        db.session.commit()
+        return jsonify(message="Yup you updated a planet"), 202
+    else:
+        return jsonify(message="The planet does not exist")
+
 
 # database models
 class User(db.Model):
