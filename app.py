@@ -6,6 +6,9 @@ import os
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_mail import Mail, Message
+from flask_restful import Api
+from PIL import Image  
+import PIL  
 
 
 app = Flask(__name__)
@@ -23,14 +26,13 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 jwt = JWTManager(app)
 mail = Mail(app)
+api= Api(app)
 
 
 @app.route('/')
 def default_hi():
     print("Hi, there!")
     return "Hi, there from earth!" 
-
-
 
 @app.cli.command('db_create')
 def db_create():
@@ -98,6 +100,13 @@ def super_simple():
     return jsonify(message= "Hello From The Moon API"), 200
 
 
+@app.route('/planet_image')
+def planet_image(request):
+    print(request)
+    image=request.FILES['image']
+    return jsonify(message= "Image Recieved"), 200
+
+
 @app.route('/url_variables/<string:name>/<int:age>')
 def url_variables(name:str, age:int):
     if age < 18:
@@ -139,6 +148,17 @@ def register():
         db.session.commit()
         return jsonify(message="User created successfully."), 201
     # Supporting a pure json post 
+
+
+@app.route('/upload', methods=['POST'])
+def upload_image():
+    file = request.files['image']
+    if file:
+        file.save(file.filename)
+        return {"message": "Image uploaded successfully"}, 200
+    else:
+        return {"message": "No file provided"}, 400
+
 
 
 @app.route('/login', methods=['POST'])
