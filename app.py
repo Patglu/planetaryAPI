@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_mail import Mail, Message
 from flask_restful import Api
 from PIL import Image  
-import PIL  
+
 
 
 app = Flask(__name__)
@@ -155,6 +155,7 @@ def upload_image():
     file = request.files['image']
     if file:
         file.save(file.filename)
+        # return send_file("102820308_C72_1.jpeg", mimetype='image/jpg')
         return {"message": "Image uploaded successfully"}, 200
     else:
         return {"message": "No file provided"}, 400
